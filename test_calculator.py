@@ -3,6 +3,7 @@
 import unittest
 from calculator import Calculator
 
+
 class TestCalculator(unittest.TestCase):
     """Test cases for the Calculator class."""
 
