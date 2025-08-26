@@ -24,3 +24,8 @@ class Calculator:
         if b == 0:
             raise ValueError("Cannot divide by zero")
         return a / b
+
+    def power_of(self, input, power):
+        """Return number to the power of.
+        """
+        return input ** power
