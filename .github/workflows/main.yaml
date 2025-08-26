@@ -2,10 +2,12 @@
 
 name: Run Python Tests and Deploy Docs
 
-# Run this workflow on every push to the main branch
+# Run tests on all branches, deploy docs only on main
 on:
   push:
-    branches: [ main ]
+    branches: ["*"] # Run on all branches
+  pull_request:
+    branches: [main] # Also run on PRs to main
 
 # Add permissions for the workflow to write to GitHub Pages
 permissions:
@@ -24,15 +26,16 @@ jobs:
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-      
+          python-version: "3.11"
+
       - name: Run tests
         run: python -m unittest discover
 
-  # New job to build and deploy the documentation
+  # Documentation jobs only run on main branch
   deploy-docs:
     name: Deploy Documentation
-    # This job requires the 'build-and-test' job to succeed first
+    # Only run on main branch AND after tests pass
+    if: github.ref == 'refs/heads/main'
     needs: build-and-test
     runs-on: ubuntu-latest
     steps:
@@ -42,8 +45,8 @@ jobs:
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-      
+          python-version: "3.11"
+
       - name: Install documentation dependencies
         run: pip install -r docs/requirements.txt
 
@@ -55,10 +58,11 @@ jobs:
         with:
           path: docs/build/
 
-  # New job to handle the actual deployment to GitHub Pages
+  # Deploy job only runs on main branch
   deploy:
     name: Deploy to GitHub Pages
-    # This job requires the 'deploy-docs' job to have uploaded the artifact
+    # Only run on main branch AND after docs are built
+    if: github.ref == 'refs/heads/main'
     needs: deploy-docs
     runs-on: ubuntu-latest
     environment:
