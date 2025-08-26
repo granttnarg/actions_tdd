@@ -9,13 +9,31 @@ on:
   pull_request:
     branches: [main] # Run on PRs targeting main
 
-# Add permissions for the workflow to write to GitHub Pages
+# Add permissions for the workflow
 permissions:
   contents: read
   pages: write
   id-token: write
 
 jobs:
+  lint:
+    name: Lint Code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install flake8
+        run: pip install flake8
+
+      - name: Run flake8
+        run: flake8 *.py test_*.py --max-line-length=88 --ignore=E203,W503
+
   build-and-test:
     name: Build and Test
     runs-on: ubuntu-latest
@@ -41,23 +59,18 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
-
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-
       - name: Install documentation dependencies
         run: pip install -r docs/requirements.txt
-
       - name: Build Sphinx documentation
         run: sphinx-build -b html docs/source docs/build
-
       - name: Upload documentation artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: docs/build/
-
   # Deploy job only runs on main branch
   deploy:
     name: Deploy to GitHub Pages
