@@ -39,5 +39,9 @@ class TestCalculator(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.calc.divide(10, 0)
 
+    def test_power_of (self):
+        """Test that dividing by zero raises a ValueError."""
+        self.assertEqual(self.calc.power_of(3, 2), 10)
+
 if __name__ == '__main__':
     unittest.main()
