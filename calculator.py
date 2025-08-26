@@ -22,5 +22,5 @@ class Calculator:
             ValueError: If b is zero.
         """
         if b == 0:
-            raise ValueError("This is awesome!")
+            raise ValueError("Cannot divide by zero")
         return a / b
