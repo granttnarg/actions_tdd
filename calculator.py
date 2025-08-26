@@ -17,7 +17,7 @@ class Calculator:
 
     def divide(self, a, b):
         """Return the division of a by b.
-        
+
         Raises:
             ValueError: If b is zero.
         """
